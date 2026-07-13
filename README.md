@@ -14,9 +14,9 @@ It covers two main aspects of Asynchronous Streams:
    npm install
    ```
 
-2. Run the application:
+2. Run the application in development mode:
    ```bash
-   npx tsx src/index.ts
+   npm run dev
    ```
 
 ## Setting up PostgreSQL (Supabase / Neon)
@@ -32,12 +32,17 @@ To run the database streaming example:
    ```bash
    npm run seed
    ```
-5. Run the application:
+5. Run the application in development mode:
    ```bash
-   npx tsx src/index.ts
+   npm run dev
    ```
-   The application will detect the `DATABASE_URL` and attempt to stream data out of the `sensor_readings` table.
+   The application will detect the `DATABASE_URL` and stream the 5,000 rows out of the `sensor_readings` table sequentially without overloading memory.
 
+6. (Optional) Compile and run for production:
+   ```bash
+   npm run build
+   npm start
+   ```
 ## Why Async Iterators over Arrays?
 
 In typical operations, developers might query a database or process data by returning an array (`const data = await db.query()`). For IoT data, which is continuous and huge, an array has critical flaws:

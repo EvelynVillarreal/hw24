@@ -1,4 +1,8 @@
-import type { SensorReading } from './simulator.js';
+export interface SensorReading {
+    sensorName: string;
+    value: number;
+    timestamp: Date;
+}
 
 /**
  * Asynchronous Stream Consumer

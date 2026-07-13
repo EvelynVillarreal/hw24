@@ -14,7 +14,9 @@ const pool = new Pool({
     // Note: Provide your Supabase/Neon connection string in a .env file
 });
 
-export async function processHistoricalData() {
+import type { SensorReading } from './consumer.js';
+
+export async function* getDatabaseStream(): AsyncGenerator<SensorReading> {
     const client = await pool.connect();
     
     try {
@@ -22,20 +24,16 @@ export async function processHistoricalData() {
         const query = new QueryStream('SELECT * FROM sensor_readings ORDER BY timestamp DESC');
         const stream = client.query(query);
         
-        let count = 0;
-        
         console.log("Streaming historical data from PostgreSQL...");
         
-        // We can consume the DB stream using the exact same `for await...of` pattern
+        // We can consume the DB stream and yield mapped readings
         for await (const row of stream) {
-            count++;
-            // Process the DB row one by one.
-            if (count % 1000 === 0) {
-                console.log(`Successfully streamed and processed ${count} rows from the database.`);
-            }
+            yield {
+                sensorName: row.sensor_name,
+                value: row.value,
+                timestamp: row.timestamp
+            };
         }
-        
-        console.log(`Historical processing complete. Total historical rows: ${count}`);
     } catch (error) {
         console.error("Error streaming historical data:", error);
     } finally {
