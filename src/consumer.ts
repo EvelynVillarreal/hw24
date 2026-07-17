@@ -22,7 +22,7 @@ export async function processSensorData(stream: AsyncIterable<SensorReading>) {
 
     try {
         for await (const reading of stream) {
-            // Simulated Filtering: Only process critical readings (value > 80)
+            // Filtering: Only process critical readings (value > 80)
             if (reading.value > 80) {
                 console.log(`[CRITICAL] High value detected: ${reading.sensorName} - ${reading.value} at ${reading.timestamp.toISOString()}`);
                 
